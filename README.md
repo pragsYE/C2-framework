@@ -24,7 +24,7 @@ This project is a Python-based Command and Control (C2) server designed to route
 
 ```bash
 python3 main-server.py
-
+```
 ### 2. Deploying the Beacon on the Dummy Server
 
 - **Setup the Dummy Server**: Choose a server that is publicly accessible to act as the relay (beacon). This server will route traffic between the victim and the C2 server, keeping your identity hidden.
@@ -33,3 +33,48 @@ python3 main-server.py
 
   ```bash
   python3 beacon.py
+  ```
+### 3. Creating the Payload
+
+    Edit virus.py to include the IP address of the dummy server (where the beacon is running).
+
+```python
+
+BEACON_IP = "YOUR_DUMMY_SERVER_IP"
+```
+    Distribute virus.py to the target victim. Once executed on the victim's machine, it will establish communication with the beacon, routing traffic through the dummy server to the attacker's C2 server.
+
+### 4. Running the Attack
+
+    Once the victim runs the payload, it connects to the beacon, which routes the communication to the C2 server.
+    Use the C2 server (main-server.py) to issue commands to the victim via the beacon. All responses are routed back through the beacon to the C2 server, hiding the attacker's IP.
+
+Example Workflow
+
+    Start the C2 server on the attacker's machine:
+
+   ``` bash
+
+python3 main-server.py
+  ```
+Start the beacon on a dummy server:
+
+```bash
+
+    python3 beacon.py
+```
+    Edit virus.py to use the beacon's IP, then distribute it to the victim.
+
+    Once the victim executes virus.py, the C2 server can now control the victim's machine, issuing commands and receiving responses via the beacon.
+
+Security Notes
+
+    Ensure that the beacon is hosted on a dummy server that cannot be easily traced back to the attacker.
+    Use encrypted channels where possible to prevent detection.
+    Regularly rotate IPs of dummy servers to further minimize exposure.
+
+Future Enhancements
+
+    Implement encryption between the C2 server, beacon, and victim for added security.
+    Add more customizable payload options to support different types of attack vectors.
+    Introduce authentication mechanisms to restrict access to the C2 server.
